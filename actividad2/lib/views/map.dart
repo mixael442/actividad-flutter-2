@@ -20,6 +20,13 @@ class _MapScreenState extends State<MapScreen> {
     showMarker();
   }
 
+  Future<BitmapDescriptor> getIcon() async {
+    var ico = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(), 'assets/pin-247(1).png');
+    var icon = ico;
+    return icon;
+  }
+
   String condicion(Data data) {
     if (data.estado == 1) {
       return 'Pendiente';
@@ -48,7 +55,7 @@ class _MapScreenState extends State<MapScreen> {
       if (double.parse(fol[i].longitud) != 0.0000000) {
         final markerID = MarkerId(i.toString());
         final marker = Marker(
-            //icon: icon,
+            icon: await getIcon(),
             markerId: markerID,
             position: LatLng(
                 double.parse(fol[i].latitud), double.parse(fol[i].longitud)),
@@ -61,21 +68,19 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
-  showMarker() {
+  showMarker() async {
     if (widget.locationID != null) {
-      onTap(LatLng(double.parse(widget.locationID!.latitud),
+      await onTap(LatLng(double.parse(widget.locationID!.latitud),
           double.parse(widget.locationID!.longitud)));
     } else {
       return null;
     }
   }
 
-  onTap(LatLng position) {
+  onTap(LatLng position) async {
     final markerID = MarkerId(_markers.length.toString());
-    final marker = Marker(
-      markerId: markerID,
-      position: position,
-    );
+    final marker =
+        Marker(markerId: markerID, position: position, icon: await getIcon());
     _markers[markerID] = marker;
     setState(() {});
   }
